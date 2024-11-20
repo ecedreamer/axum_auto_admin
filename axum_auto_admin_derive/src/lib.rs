@@ -44,28 +44,50 @@ fn impl_data_model_macro(ast: &DeriveInput) -> TokenStream {
                 axum::Router::new()
                     .route(format!("/{}/list", Self::get_struct_name()).as_str(), axum::routing::get(Self::list_handler))
                     .route(format!("/{}/create", Self::get_struct_name()).as_str(), axum::routing::get(Self::create_handler))
-                    .route(format!("/{}/:id/update", Self::get_struct_name()).as_str(), axum::routing::get(Self::update_handler))
-                    .route(format!("/{}/:id/delete", Self::get_struct_name()).as_str(), axum::routing::get(Self::delete_handler))
+                    .route(format!("/{}/create", Self::get_struct_name()).as_str(), axum::routing::post(Self::create_handler_post))
+                    .route(format!("/{}/{{id}}/update", Self::get_struct_name()).as_str(), axum::routing::get(Self::update_handler))
+                    .route(format!("/{}/{{id}}/update", Self::get_struct_name()).as_str(), axum::routing::post(Self::update_handler_post))
+                    .route(format!("/{}/{{id}}/delete", Self::get_struct_name()).as_str(), axum::routing::get(Self::delete_handler))
+                    .route(format!("/{}/{{id}}/delete", Self::get_struct_name()).as_str(), axum::routing::post(Self::delete_handler_post))
             }
 
             async fn list_handler() -> impl axum::response::IntoResponse {
                 tracing::info!("THis is the list page");
-                "List Page"
+                format!("List '{}' Page", Self::get_struct_name())
             }
 
             async fn create_handler() -> impl axum::response::IntoResponse {
                 tracing::info!("THis is the create page");
-                "Create Page"
+                format!("Create '{}' Page", Self::get_struct_name())
             }
 
-            async fn update_handler() -> impl axum::response::IntoResponse {
+            async fn create_handler_post() -> impl axum::response::IntoResponse {
+                tracing::info!("THis is the create page");
+                "Data created successfully"
+            }
+
+            async fn update_handler(axum::extract::Path(data_id): axum::extract::Path<usize>) -> impl axum::response::IntoResponse {
                 tracing::info!("THis is the update page");
-                "Update Page"
+                tracing::info!("Data ID: {}", data_id);
+                format!("Update Page\nData ID: {}", data_id)
             }
 
-            async fn delete_handler() -> impl axum::response::IntoResponse {
+            async fn update_handler_post(axum::extract::Path(data_id): axum::extract::Path<usize>) -> impl axum::response::IntoResponse {
+                tracing::info!("THis is the update page");
+                tracing::info!("Data ID: {}", data_id);
+                format!("Data with ID {} updated successfully.", data_id)
+            }
+
+            async fn delete_handler(axum::extract::Path(data_id): axum::extract::Path<usize>) -> impl axum::response::IntoResponse {
                 tracing::info!("THis is the delete page");
-                "Delete Page"
+                tracing::info!("Data ID: {}", data_id);
+                format!("Delete Page\nData ID: {}", data_id)
+            }
+
+            async fn delete_handler_post(axum::extract::Path(data_id): axum::extract::Path<usize>) -> impl axum::response::IntoResponse {
+                tracing::info!("THis is the delete page");
+                tracing::info!("Data ID: {}", data_id);
+                format!("Data with ID {} deleted successfully.", data_id)
             }
         }
 
