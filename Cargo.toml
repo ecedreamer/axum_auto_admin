@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "axum_auto_admin",
+    "axum_auto_admin_derive",
+    "examples/example_*",
+]

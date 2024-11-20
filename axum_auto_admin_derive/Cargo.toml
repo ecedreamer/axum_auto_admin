@@ -1,0 +1,13 @@
+[package]
+name = "axum_auto_admin_derive"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+syn = "2.0.87"
+quote = "1.0.37"
+axum = "0.7.9"
+
+
+[lib]
+proc-macro = true
